@@ -26,7 +26,7 @@ jobs:
         run: doctl registry login --expiry-seconds 600
       
       - name: Build image 
-        run: docker build -t registry.digitalocean.com/tinnaing347/gohelloserver:${{github.event.inputs.version }} --build-arg GITHUB_ACCESS_TOKEN=${{ secrets.GITHUB_ACCESS_TOKEN }} .
+        run: docker build -t registry.digitalocean.com/tinnaing347/gohelloserver:${{github.event.inputs.version }} --build-arg GITHUB_ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }} .
 
       - name: Push image to DO Container Registry 
         run: docker push registry.digitalocean.com/tinnaing347/gohelloserver:${{github.event.inputs.version }}
