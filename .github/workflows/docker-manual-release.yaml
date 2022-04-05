@@ -1,0 +1,32 @@
+# this is a manual workflow dispatch that can be triggered from any branch 
+# useful for building dev images that don't want to be merged into stable-release
+
+name: Build and publish manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Image version'
+        required: true
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo 
+        uses: actions/checkout@v2
+      
+      - name: Install doctl 
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITAL_OCEAN_TOKEN }}
+      
+      - name: Log in to DO Container Registry 
+        run: doctl registry login --expiry-seconds 600
+      
+      - name: Build image 
+        run: docker build -t registry.digitalocean.com/tinnaing347/gohelloserver:${{github.event.inputs.version }} --build-arg GITHUB_ACCESS_TOKEN=${{ secrets.GITHUB_ACCESS_TOKEN }} .
+
+      - name: Push image to DO Container Registry 
+        run: docker push registry.digitalocean.com/tinnaing347/gohelloserver:${{github.event.inputs.version }}
