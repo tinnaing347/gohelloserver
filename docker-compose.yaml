@@ -1,0 +1,20 @@
+# This is a localhost development configuration for this service
+version: '3.4'
+
+services:
+
+  gohelloserver:
+    restart: "no"
+    container_name:  gohelloserver
+    image: gohelloserver:dev
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        - GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
